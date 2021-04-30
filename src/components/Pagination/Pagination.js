@@ -36,8 +36,8 @@ function Pagination({ pokemon, pokemonPerPage, currentPage, setCurrentPage }) {
     }
 
     return (
-        <div>
-            <table>
+        <div className='Pagination'>
+            <table className='Pagination__table'>
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -52,19 +52,20 @@ function Pagination({ pokemon, pokemonPerPage, currentPage, setCurrentPage }) {
                             return (
                                 <tr key={poke.name}>
                                     <td>{poke.name}</td>
-                                    <td>{poke.height}</td>
-                                    <td>{poke.weight}</td>
-                                    <td>{formatAbilities(poke.abilities)}</td>
+                                    <td>{poke.height + 'dm'}</td>
+                                    <td>{poke.weight + 'hg'}</td>
+                                    <td className='td-abilities'>{formatAbilities(poke.abilities)}</td>
                                 </tr>
                             )
                         })
                     }
                 </tbody>
             </table>
-            <div>
+            <div className='Pagination__btns'>
                 <button
                     onClick={previousPage}
                     disabled={currentPage === 1}
+                    className='prev-next-btns'
                 >
                     Previous Page
                 </button>
@@ -82,6 +83,7 @@ function Pagination({ pokemon, pokemonPerPage, currentPage, setCurrentPage }) {
                 <button
                     onClick={nextPage}
                     disabled={currentPage === pages}
+                    className='prev-next-btns'
                 >
                     Next Page
                 </button>

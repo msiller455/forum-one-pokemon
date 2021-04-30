@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Header from './components/Header/Header'
 import Pagination from './components/Pagination/Pagination'
-import './App.css';
+import './App.scss';
 
 function App() {
   const [ allPokemon, setAllPokemon ] = useState([])
@@ -30,7 +30,7 @@ function App() {
   }
 
   function getMostBaseExpPokeName() {
-    // Using a reducer to compare one pokemon's base exp to the next one's, and keeping the bigger value's pokemon in the accumulator
+    // Using a reducer to compare one pokemon's base exp to the next one's, and keeping the larger value's pokemon in the accumulator
     return allPokemon.reduce((maxBaseExpPoke, currPoke) => currPoke.base_experience > maxBaseExpPoke.base_experience ? currPoke : maxBaseExpPoke, allPokemon[0]).name
   }
 
@@ -51,7 +51,7 @@ function App() {
   }
 
   const filterForm = (
-    <form>
+    <form className="App__form">
       <label>Filter By Type</label>
       <select onChange={handleFilter}>
         <option value=''> No Filter </option>
@@ -68,8 +68,7 @@ function App() {
 
   if(errorMessage) return <p>{errorMessage}</p>
   return (
-    <div>
-      Forum One Pokemon App
+    <div className='App'>
       {
         allPokemon.length ?
         <>
