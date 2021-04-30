@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import Header from './components/Header/Header'
+import Pagination from './components/Pagination/Pagination'
 import './App.css';
 
 function App() {
   const [ allPokemon, setAllPokemon ] = useState([])
   const [ errorMessage, setErrorMessage ] = useState('')
   const [ filter, setFilter ] = useState('')
+  const [ currentPage, setCurrentPage ] = useState(1)
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/pokemon?limit=60')
@@ -39,15 +41,20 @@ function App() {
     return [...new Set(typeArr.map(typeObj => typeObj.type.name))]
   }
 
-  function filterPokemon() {
+  function handleFilter(event) {
+    setCurrentPage(1)
+    setFilter(event.target.value)
+  }
+
+  function filterPokemonByType() {
     return allPokemon.filter(poke => poke.types.some(typeObj => typeObj.type.name === filter))
   }
 
   const filterForm = (
     <form>
       <label>Filter By Type</label>
-      <select onChange={(e) => setFilter(e.target.value)}>
-        <option value=''>No Filter</option>
+      <select onChange={handleFilter}>
+        <option value=''> No Filter </option>
         {
           getFilterOptions().map(option => {
             return <option key={option} value={option}>
@@ -66,7 +73,17 @@ function App() {
       {
         allPokemon.length ?
         <>
-          <Header avgWeight={getAvgWeight()} mostBaseExpPokeName={getMostBaseExpPokeName()} filterForm={filterForm}/>
+          <Header 
+            avgWeight={getAvgWeight()}
+            mostBaseExpPokeName={getMostBaseExpPokeName()}
+            filterForm={filterForm}
+          />
+          <Pagination 
+            pokemon={filter ? filterPokemonByType() : allPokemon}
+            pokemonPerPage={20}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
         </>
         :
         <p>Fetching data...</p>
