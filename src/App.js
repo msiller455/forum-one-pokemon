@@ -5,6 +5,7 @@ import './App.css';
 function App() {
   const [ allPokemon, setAllPokemon ] = useState([])
   const [ errorMessage, setErrorMessage ] = useState('')
+  const [ filter, setFilter ] = useState('')
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/pokemon?limit=60')
@@ -23,13 +24,40 @@ function App() {
   }, [])
 
   function getAvgWeight() {
-    return allPokemon.reduce((acc, currPoke) => acc + parseInt(currPoke.weight), 0) / allPokemon.length
+    return allPokemon.reduce((acc, currPoke) => acc + parseInt(currPoke.weight), 0) / allPokemon.length + 'hg'
   }
 
   function getMostBaseExpPokeName() {
-    // Using a reducer to compare one pokemon's base exp to next one's, and keeping the bigger value's pokemon in the accumulater
+    // Using a reducer to compare one pokemon's base exp to the next one's, and keeping the bigger value's pokemon in the accumulator
     return allPokemon.reduce((maxBaseExpPoke, currPoke) => currPoke.base_experience > maxBaseExpPoke.base_experience ? currPoke : maxBaseExpPoke, allPokemon[0]).name
   }
+
+  function getFilterOptions() {
+    // Make a nested array of every pokemon's types objects and flatten it
+    const typeArr = allPokemon.map(poke => poke.types).flat()
+    // Return new array with only unique values using a Set
+    return [...new Set(typeArr.map(typeObj => typeObj.type.name))]
+  }
+
+  function filterPokemon() {
+    return allPokemon.filter(poke => poke.types.some(typeObj => typeObj.type.name === filter))
+  }
+
+  const filterForm = (
+    <form>
+      <label>Filter By Type</label>
+      <select onChange={(e) => setFilter(e.target.value)}>
+        <option value=''>No Filter</option>
+        {
+          getFilterOptions().map(option => {
+            return <option key={option} value={option}>
+              {option}
+            </option>
+          })
+        }
+      </select>
+    </form>
+  )
 
   if(errorMessage) return <p>{errorMessage}</p>
   return (
@@ -38,7 +66,7 @@ function App() {
       {
         allPokemon.length ?
         <>
-          <Header avgWeight={getAvgWeight()} mostBaseExpPokeName={getMostBaseExpPokeName()}/>
+          <Header avgWeight={getAvgWeight()} mostBaseExpPokeName={getMostBaseExpPokeName()} filterForm={filterForm}/>
         </>
         :
         <p>Fetching data...</p>
