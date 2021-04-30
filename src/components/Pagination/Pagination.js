@@ -1,4 +1,5 @@
 function Pagination({ pokemon, pokemonPerPage, currentPage, setCurrentPage }) {
+
     // Number of pages we will have total
     const pages = Math.ceil(pokemon.length / pokemonPerPage)
     // Number of Pagination buttons we will have at once (currently limiting it to 3 buttons)
